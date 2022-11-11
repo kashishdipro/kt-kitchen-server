@@ -16,6 +16,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         const itemCollection = client.db("ktKitchen").collection("foodItems");
+        const reviewCollection = client.db("ktKitchen").collection("reviewerComment");
         app.get('/items', async(req, res) =>{
             const query = {}
             const cursor = itemCollection.find(query);
@@ -29,6 +30,13 @@ async function run(){
             const query = {_id: ObjectId(id)};
             const item = await itemCollection.findOne(query);
             res.send(item);
+        })
+
+        // Review api
+        app.post('/reviews', async(req, res) =>{
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
         })
     }finally{
 
