@@ -57,6 +57,27 @@ async function run(){
             const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
+
+        // Edit Review Api
+        app.get('/review/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const item = await reviewCollection.findOne(query);
+            res.send(item);
+        })
+
+        app.patch('/review/:id', async(req, res) =>{
+            const id = req.params.id;
+            const review = req.body.message;
+            const query = {_id: ObjectId(id)};
+            const updatedReview = {
+                $set:{
+                    message: review
+                }
+            }
+            const result = await reviewCollection.updateOne(query, updatedReview);
+            res.send(result);
+        })
     }finally{
 
     }
