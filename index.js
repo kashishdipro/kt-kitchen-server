@@ -32,6 +32,12 @@ async function run(){
             res.send(item);
         })
 
+        app.post('/items', async(req, res) =>{
+            const review = req.body;
+            const result = await itemCollection.insertOne(review);
+            res.send(result);
+        })
+
         // Review api
         app.get('/reviews', async(req, res) =>{
             let query = {};
