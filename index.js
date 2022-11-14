@@ -46,17 +46,24 @@ async function run(){
                     email: req.query.email
                 }
             }
+            if (req.query.item) {
+                query = {
+                    item: req.query.item
+                }
+            } 
             const cursor = reviewCollection.find(query);
             const review = await cursor.toArray();
             res.send(review);
         })
 
+        // Post Review Api
         app.post('/reviews', async(req, res) =>{
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
 
+        // Delete Review Api
         app.delete('/reviews/:id', async(req, res) =>{
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
