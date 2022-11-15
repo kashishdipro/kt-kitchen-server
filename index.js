@@ -19,11 +19,16 @@ async function run(){
         const reviewCollection = client.db("ktKitchen").collection("reviewerComment");
         app.get('/items', async(req, res) =>{
             const query = {}
-            const cursor = itemCollection.find(query);
+            // Find Limited Items 
             const cursorLimit = itemCollection.find(query).limit(3);
             const limiteditems = await cursorLimit.toArray();
+            // Find All Items
+            const cursor = itemCollection.find(query);
             const items = await cursor.toArray();
-            res.send({limiteditems, items});
+            // Find Limited Latest Items
+            const cursorLatest = itemCollection.find(query).sort({_id: -1}).limit(4);
+            const latestitems = await cursorLatest.toArray();
+            res.send({limiteditems, items, latestitems});
         });
         app.get('/items/:id', async(req, res) =>{
             const id = req.params.id;
@@ -51,7 +56,7 @@ async function run(){
                     item: req.query.item
                 }
             } 
-            const cursor = reviewCollection.find(query);
+            const cursor = reviewCollection.find(query).sort({_id: -1});
             const review = await cursor.toArray();
             res.send(review);
         })
@@ -60,7 +65,7 @@ async function run(){
         app.post('/reviews', async(req, res) =>{
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
-            res.send(result);
+            res.send(review);
         })
 
         // Delete Review Api
